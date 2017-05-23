@@ -109,28 +109,28 @@ def getAvgFeatureVecs(reviews, model, num_features):
 
 # ****************************************************************
 
-trainData = pd.read_csv('train.csv')
-train = trainData.replace(np.nan, "", regex=True)
+# trainData = pd.read_csv('train.csv')
+# train = trainData.replace(np.nan, "", regex=True)
 
 # ****************************************************************
 
-count = 1
-cannot_convert = 0
-sentences = []  # Initialize an empty list of sentences
+# count = 1
+# cannot_convert = 0
+# sentences = []  # Initialize an empty list of sentences
 
-for review1, review2 in zip(train["question1"], train["question2"]):
-	try:
-		sentences +=  review_to_sentences(review1.decode("utf8"), tokenizer)
-	except:
-		cannot_convert += 1
-	try:
-		sentences += review_to_sentences(review2.decode("utf8"), tokenizer)
-	except:
-		cannot_convert += 1
-	print "Train Question for Word2Vec ", count, " done"
-	count += 1
-	# if (count > 10000):
-	# 	break
+# for review1, review2 in zip(train["question1"], train["question2"]):
+# 	try:
+# 		sentences +=  review_to_sentences(review1.decode("utf8"), tokenizer)
+# 	except:
+# 		cannot_convert += 1
+# 	try:
+# 		sentences += review_to_sentences(review2.decode("utf8"), tokenizer)
+# 	except:
+# 		cannot_convert += 1
+# 	print "Train Question for Word2Vec ", count, " done"
+# 	count += 1
+# 	# if (count > 10000):
+# 	# 	break
 
 
 # ****************************************************************
@@ -143,20 +143,20 @@ downsampling = 1e-3   # Downsample setting for frequent words
 
 # ****************************************************************
 
-print "Training model..."
-model = word2vec.Word2Vec(sentences, workers=num_workers, \
-            size=num_features, min_count = min_word_count, \
-            window = context, sample = downsampling)
+# print "Training model..."
+# model = word2vec.Word2Vec(sentences, workers=num_workers, \
+#             size=num_features, min_count = min_word_count, \
+#             window = context, sample = downsampling)
 
-# If you don't plan to train the model any further, calling 
-# init_sims will make the model much more memory-efficient.
-model.init_sims(replace=True)
+# # If you don't plan to train the model any further, calling 
+# # init_sims will make the model much more memory-efficient.
+# model.init_sims(replace=True)
 
-# It can be helpful to create a meaningful model name and 
-# save the model for later use. You can load it later using Word2Vec.load()
+# # It can be helpful to create a meaningful model name and 
+# # save the model for later use. You can load it later using Word2Vec.load()
+# # model_name = "300features_40minwords_10context"
 # model_name = "300features_40minwords_10context"
-model_name = "300features_40minwords_10context"
-model.save(model_name)
+# model.save(model_name)
 
 # ****************************************************************
 # Calculate average feature vectors for training and testing sets,
@@ -215,6 +215,17 @@ clf = clf.fit(X, train['is_duplicate'])
 
 ######################################################################################
 
+clean_train_q1 = []
+clean_train_q2 = []
+
+trainDataVecs_q1 = []
+trainDataVecs_q2 = []
+
+features = []
+X = []
+
+######################################################################################
+
 print "Read test data"
 
 testData = pd.read_csv('test.csv')
@@ -242,6 +253,11 @@ testDataVecs_q2 = getAvgFeatureVecs( clean_test_q2, model, num_features=300 )
 
 # ****************************************************************
 
+clean_test_q1 = []
+clean_test_q2 = []
+
+# ****************************************************************
+
 print "Get Similarities"
 
 test_features = []
@@ -250,6 +266,11 @@ for review1, review2 in zip(testDataVecs_q1, testDataVecs_q2):
 		test_features.append(1 - spatial.distance.cosine(review1, review2))
 	except:
 		test_features.append(0.0)
+
+######################################################################################
+
+testDataVecs_q1 = []
+testDataVecs_q2 = []
 
 ######################################################################################
 
