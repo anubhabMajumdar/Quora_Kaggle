@@ -109,9 +109,6 @@ def getAvgFeatureVecs(reviews, model, num_features):
 
 # ****************************************************************
 
-trainData = pd.read_csv('train.csv')
-train = trainData.replace(np.nan, "", regex=True)
-
 def getPredictions(clean_test_q1, clean_test_q2, model):
 	print "Getting features of Q1"
 	testDataVecs_q1 = getAvgFeatureVecs( clean_test_q1, model, num_features=300 )
@@ -146,8 +143,8 @@ def getPredictions(clean_test_q1, clean_test_q2, model):
 # ****************************************************************
 
 
-# trainData = pd.read_csv('train.csv')
-# train = trainData.replace(np.nan, "", regex=True)
+trainData = pd.read_csv('train.csv')
+train = trainData.replace(np.nan, "", regex=True)
 
 # ****************************************************************
 
