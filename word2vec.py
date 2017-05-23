@@ -109,8 +109,8 @@ def getAvgFeatureVecs(reviews, model, num_features):
 
 # ****************************************************************
 
-# trainData = pd.read_csv('train.csv')
-# train = trainData.replace(np.nan, "", regex=True)
+trainData = pd.read_csv('train.csv')
+train = trainData.replace(np.nan, "", regex=True)
 
 # ****************************************************************
 
@@ -215,6 +215,9 @@ clf = clf.fit(X, train['is_duplicate'])
 
 ######################################################################################
 
+trainData = []
+train = []
+
 clean_train_q1 = []
 clean_train_q2 = []
 
@@ -256,6 +259,9 @@ testDataVecs_q2 = getAvgFeatureVecs( clean_test_q2, model, num_features=300 )
 clean_test_q1 = []
 clean_test_q2 = []
 
+testData = []
+test = []
+
 # ****************************************************************
 
 print "Get Similarities"
@@ -287,7 +293,7 @@ print "Write predictions"
 
 test_f = pd.read_csv('test.csv')
 output = pd.DataFrame( data={"test_id":test_f['test_id'], "is_duplicate":test_labels} )
-output.to_csv( "BOW_Custom_Similarity_Measure_Predictions.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
+output.to_csv( "Word2vec_Custom_Similarity_Measure_Predictions.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
 
 
 
