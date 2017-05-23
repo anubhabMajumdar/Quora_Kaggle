@@ -112,6 +112,43 @@ def getAvgFeatureVecs(reviews, model, num_features):
 trainData = pd.read_csv('train.csv')
 train = trainData.replace(np.nan, "", regex=True)
 
+def getPredictions(clean_test_q1, clean_test_q2, model):
+	print "Getting features of Q1"
+	testDataVecs_q1 = getAvgFeatureVecs( clean_test_q1, model, num_features=300 )
+
+	print "Getting features of Q2"
+	testDataVecs_q2 = getAvgFeatureVecs( clean_test_q2, model, num_features=300 )
+
+	# ****************************************************************
+
+	print "Get Similarities"
+
+	test_features = []
+	for review1, review2 in zip(testDataVecs_q1, testDataVecs_q2):
+		try:
+			test_features.append(1 - spatial.distance.cosine(review1, review2))
+		except:
+			test_features.append(0.0)
+
+	######################################################################################
+
+	print "Predict test data features"
+
+	# Y = test_features[:, None]
+	Y = np.reshape(features, (len(test_features), 1))
+
+	test_labels = clf.predict(Y)
+
+	######################################################################################
+
+	return test_labels
+
+# ****************************************************************
+
+
+# trainData = pd.read_csv('train.csv')
+# train = trainData.replace(np.nan, "", regex=True)
+
 # ****************************************************************
 
 # count = 1
@@ -236,56 +273,68 @@ test = testData.replace(np.nan, "", regex=True)
 
 # ****************************************************************
 
-count = 1
+count = 0
 clean_test_q1 = []
 clean_test_q2 = []
+test_labels = []
+batch = 1000
+batch_count = 0
 
 for review1, review2 in zip(test["question1"], test["question2"]):
 	clean_test_q1.append( review_to_wordlist( review1, remove_stopwords=True ))
 	clean_test_q2.append( review_to_wordlist( review2, remove_stopwords=True ))
-	print "Test Question ", count, " done"
+	
 	count += 1
-
+	
+	if count==batch:
+		test_labels.extend(getPredictions(clean_test_q1, clean_test_q2, model))
+		count = 0
+		clean_test_q1 = []
+		clean_test_q2 = []
+		batch_count+=1
+		print "Batch ", batch_count, " done"
+		
 # ****************************************************************
 
-print "Getting features of Q1"
-testDataVecs_q1 = getAvgFeatureVecs( clean_test_q1, model, num_features=300 )
+# print "Getting features of Q1"
+# testDataVecs_q1 = getAvgFeatureVecs( clean_test_q1, model, num_features=300 )
 
-print "Getting features of Q2"
-testDataVecs_q2 = getAvgFeatureVecs( clean_test_q2, model, num_features=300 )
+# print "Getting features of Q2"
+# testDataVecs_q2 = getAvgFeatureVecs( clean_test_q2, model, num_features=300 )
 
-# ****************************************************************
+# # ****************************************************************
 
-clean_test_q1 = []
-clean_test_q2 = []
+# clean_test_q1 = []
+# clean_test_q2 = []
 
 testData = []
 test = []
 
 # ****************************************************************
+# # ****************************************************************
 
-print "Get Similarities"
+# print "Get Similarities"
 
-test_features = []
-for review1, review2 in zip(testDataVecs_q1, testDataVecs_q2):
-	try:
-		test_features.append(1 - spatial.distance.cosine(review1, review2))
-	except:
-		test_features.append(0.0)
+# test_features = []
+# for review1, review2 in zip(testDataVecs_q1, testDataVecs_q2):
+# 	try:
+# 		test_features.append(1 - spatial.distance.cosine(review1, review2))
+# 	except:
+# 		test_features.append(0.0)
 
-######################################################################################
+# ######################################################################################
 
-testDataVecs_q1 = []
-testDataVecs_q2 = []
+# testDataVecs_q1 = []
+# testDataVecs_q2 = []
 
-######################################################################################
+# ######################################################################################
 
-print "Predict test data features"
+# print "Predict test data features"
 
-# Y = test_features[:, None]
-Y = np.reshape(features, (len(test_features), 1))
+# # Y = test_features[:, None]
+# Y = np.reshape(features, (len(test_features), 1))
 
-test_labels = clf.predict(Y)
+# test_labels = clf.predict(Y)
 
 ######################################################################################
 
