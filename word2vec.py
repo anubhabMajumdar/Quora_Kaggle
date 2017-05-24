@@ -290,7 +290,8 @@ for review1, review2 in zip(test["question1"], test["question2"]):
 		clean_test_q2 = []
 		batch_count+=1
 		print "Batch ", batch_count, " done"
-		
+
+test_labels.extend(getPredictions(clean_test_q1, clean_test_q2, model))		
 # ****************************************************************
 
 # print "Getting features of Q1"
