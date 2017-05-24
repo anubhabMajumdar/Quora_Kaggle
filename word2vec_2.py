@@ -207,7 +207,7 @@ model.init_sims(replace=True)
 # It can be helpful to create a meaningful model name and 
 # save the model for later use. You can load it later using Word2Vec.load()
 # model_name = "300features_40minwords_10context"
-model_name = "300features_40minwords_10context"
+model_name = "300features_40minwords_10context_allData"
 model.save(model_name)
 
 # ****************************************************************
