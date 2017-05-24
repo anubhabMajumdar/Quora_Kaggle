@@ -132,7 +132,7 @@ def getPredictions(clean_test_q1, clean_test_q2, model):
 	print "Predict test data features"
 
 	# Y = test_features[:, None]
-	Y = np.reshape(features, (len(test_features), 1))
+	Y = np.reshape(test_features, (len(test_features), 1))
 
 	test_labels = clf.predict(Y)
 
