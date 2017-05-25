@@ -166,12 +166,16 @@ for review1, review2 in zip(train["question1"], train["question2"]):
 	# if (count > 10000):
 	# 	break
 
+train = []
+trainData = []
 # ****************************************************************
 
 print "Read test data"
 
 testData = pd.read_csv('test.csv')
 test = testData.replace(np.nan, "", regex=True)
+
+testData = []
 
 for review1, review2 in zip(test["question1"], test["question2"]):
 	try:
@@ -184,6 +188,8 @@ for review1, review2 in zip(test["question1"], test["question2"]):
 		cannot_convert += 1
 	print "Test Question for Word2Vec ", count, " done"
 	count += 1
+	if count > 1250000:
+		break
 
 # ****************************************************************
 
