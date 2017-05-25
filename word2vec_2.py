@@ -148,48 +148,48 @@ train = trainData.replace(np.nan, "", regex=True)
 
 # ****************************************************************
 
-count = 1
-cannot_convert = 0
-sentences = []  # Initialize an empty list of sentences
+# count = 1
+# cannot_convert = 0
+# sentences = []  # Initialize an empty list of sentences
 
-for review1, review2 in zip(train["question1"], train["question2"]):
-	try:
-		sentences +=  review_to_sentences(review1.decode("utf8"), tokenizer)
-	except:
-		cannot_convert += 1
-	try:
-		sentences += review_to_sentences(review2.decode("utf8"), tokenizer)
-	except:
-		cannot_convert += 1
-	print "Train Question for Word2Vec ", count, " done"
-	count += 1
-	# if (count > 10000):
-	# 	break
+# for review1, review2 in zip(train["question1"], train["question2"]):
+# 	try:
+# 		sentences +=  review_to_sentences(review1.decode("utf8"), tokenizer)
+# 	except:
+# 		cannot_convert += 1
+# 	try:
+# 		sentences += review_to_sentences(review2.decode("utf8"), tokenizer)
+# 	except:
+# 		cannot_convert += 1
+# 	print "Train Question for Word2Vec ", count, " done"
+# 	count += 1
+# 	# if (count > 10000):
+# 	# 	break
 
-train = []
-trainData = []
+# train = []
+# trainData = []
 # ****************************************************************
 
-print "Read test data"
+# print "Read test data"
 
-testData = pd.read_csv('test.csv')
-test = testData.replace(np.nan, "", regex=True)
+# testData = pd.read_csv('test.csv')
+# test = testData.replace(np.nan, "", regex=True)
 
-testData = []
+# testData = []
 
-for review1, review2 in zip(test["question1"], test["question2"]):
-	try:
-		sentences +=  review_to_sentences(review1.decode("utf8"), tokenizer)
-	except:
-		cannot_convert += 1
-	try:
-		sentences += review_to_sentences(review2.decode("utf8"), tokenizer)
-	except:
-		cannot_convert += 1
-	print "Test Question for Word2Vec ", count, " done"
-	count += 1
-	if count > 1250000:
-		break
+# for review1, review2 in zip(test["question1"], test["question2"]):
+# 	try:
+# 		sentences +=  review_to_sentences(review1.decode("utf8"), tokenizer)
+# 	except:
+# 		cannot_convert += 1
+# 	try:
+# 		sentences += review_to_sentences(review2.decode("utf8"), tokenizer)
+# 	except:
+# 		cannot_convert += 1
+# 	print "Test Question for Word2Vec ", count, " done"
+# 	count += 1
+# 	if count > 1250000:
+# 		break
 
 # ****************************************************************
 
@@ -201,39 +201,39 @@ downsampling = 1e-3   # Downsample setting for frequent words
 
 # ****************************************************************
 
-print "Training model..."
-model = word2vec.Word2Vec(sentences, workers=num_workers, \
-            size=num_features, min_count = min_word_count, \
-            window = context, sample = downsampling)
+# print "Training model..."
+# model = word2vec.Word2Vec(sentences, workers=num_workers, \
+#             size=num_features, min_count = min_word_count, \
+#             window = context, sample = downsampling)
 
-# If you don't plan to train the model any further, calling 
-# init_sims will make the model much more memory-efficient.
-model.init_sims(replace=True)
+# # If you don't plan to train the model any further, calling 
+# # init_sims will make the model much more memory-efficient.
+# model.init_sims(replace=True)
 
-# It can be helpful to create a meaningful model name and 
-# save the model for later use. You can load it later using Word2Vec.load()
-# model_name = "300features_40minwords_10context"
+# # It can be helpful to create a meaningful model name and 
+# # save the model for later use. You can load it later using Word2Vec.load()
+# # model_name = "300features_40minwords_10context"
 model_name = "300features_40minwords_10context_allData"
-model.save(model_name)
+# model.save(model_name)
 
-# ****************************************************************
-# # Calculate average feature vectors for training and testing sets,
-# # using the functions we defined above. Notice that we now use stop word
-# # removal.
+# # ****************************************************************
+# # # Calculate average feature vectors for training and testing sets,
+# # # using the functions we defined above. Notice that we now use stop word
+# # # removal.
 
-# model = word2vec.Word2Vec.load("300features_40minwords_10context")
+model = word2vec.Word2Vec.load(model_name)
 
 # # ****************************************************************
 
-# count = 1
-# clean_train_q1 = []
-# clean_train_q2 = []
+count = 1
+clean_train_q1 = []
+clean_train_q2 = []
 
-# for review1, review2 in zip(train["question1"], train["question2"]):
-# 	clean_train_q1.append( review_to_wordlist( review1, remove_stopwords=True ))
-# 	clean_train_q2.append( review_to_wordlist( review2, remove_stopwords=True ))
-# 	print "Train Question ", count, " done"
-# 	count += 1
+for review1, review2 in zip(train["question1"], train["question2"]):
+	clean_train_q1.append( review_to_wordlist( review1, remove_stopwords=True ))
+	clean_train_q2.append( review_to_wordlist( review2, remove_stopwords=True ))
+	print "Train Question ", count, " done"
+	count += 1
 
 # # ****************************************************************
 
@@ -243,128 +243,87 @@ model.save(model_name)
 
 # # ****************************************************************
 
-# print "Getting features of Q1"
-# trainDataVecs_q1 = getAvgFeatureVecs( clean_train_q1, model, num_features=300 )
+print "Getting features of Q1"
+trainDataVecs_q1 = getAvgFeatureVecs( clean_train_q1, model, num_features=300 )
 
-# print "Getting features of Q2"
-# trainDataVecs_q2 = getAvgFeatureVecs( clean_train_q2, model, num_features=300 )
-
-# # ****************************************************************
-
-# print "Get Similarities"
-
-# features = []
-# for review1, review2 in zip(trainDataVecs_q1, trainDataVecs_q2):
-# 	try:
-# 		features.append(1 - spatial.distance.cosine(review1, review2))
-# 	except:
-# 		features.append(0.0)
+print "Getting features of Q2"
+trainDataVecs_q2 = getAvgFeatureVecs( clean_train_q2, model, num_features=300 )
 
 # # ****************************************************************
 
-# print "Fit train data features"
+print "Get Similarities"
 
-# X=np.reshape(features, (len(features), 1))
+features = []
+for review1, review2 in zip(trainDataVecs_q1, trainDataVecs_q2):
+	try:
+		features.append(1 - spatial.distance.cosine(review1, review2))
+	except:
+		features.append(0.0)
 
-# # clf = tree.DecisionTreeClassifier()
-# clf = svm.LinearSVC()
-# # clf = svm.SVC(kernel='rbf', degree=3)
-# clf = clf.fit(X, train['is_duplicate'])
+# # ****************************************************************
+
+print "Fit train data features"
+
+X=np.reshape(features, (len(features), 1))
+
+# clf = tree.DecisionTreeClassifier()
+clf = svm.LinearSVC()
+# clf = svm.SVC(kernel='rbf', degree=3)
+clf = clf.fit(X, train['is_duplicate'])
 
 # ######################################################################################
 
-# trainData = []
-# train = []
+trainData = []
+train = []
 
-# clean_train_q1 = []
-# clean_train_q2 = []
+clean_train_q1 = []
+clean_train_q2 = []
 
-# trainDataVecs_q1 = []
-# trainDataVecs_q2 = []
+trainDataVecs_q1 = []
+trainDataVecs_q2 = []
 
-# features = []
-# X = []
+features = []
+X = []
 
 # ######################################################################################
 
-# print "Read test data"
+print "Read test data"
 
-# testData = pd.read_csv('test.csv')
-# test = testData.replace(np.nan, "", regex=True)
+testData = pd.read_csv('test.csv')
+test = testData.replace(np.nan, "", regex=True)
 
 # # ****************************************************************
 
-# count = 0
-# clean_test_q1 = []
-# clean_test_q2 = []
-# test_labels = []
-# batch = 1000
-# batch_count = 0
+count = 0
+clean_test_q1 = []
+clean_test_q2 = []
+test_labels = []
+batch = 1000
+batch_count = 0
 
-# for review1, review2 in zip(test["question1"], test["question2"]):
-# 	clean_test_q1.append( review_to_wordlist( review1, remove_stopwords=True ))
-# 	clean_test_q2.append( review_to_wordlist( review2, remove_stopwords=True ))
+for review1, review2 in zip(test["question1"], test["question2"]):
+	clean_test_q1.append( review_to_wordlist( review1, remove_stopwords=True ))
+	clean_test_q2.append( review_to_wordlist( review2, remove_stopwords=True ))
 	
-# 	count += 1
+	count += 1
 	
-# 	if count==batch:
-# 		test_labels.extend(getPredictions(clean_test_q1, clean_test_q2, model))
-# 		count = 0
-# 		clean_test_q1 = []
-# 		clean_test_q2 = []
-# 		batch_count+=1
-# 		print "Batch ", batch_count, " done"
+	if count==batch:
+		test_labels.extend(getPredictions(clean_test_q1, clean_test_q2, model))
+		count = 0
+		clean_test_q1 = []
+		clean_test_q2 = []
+		batch_count+=1
+		print "Batch ", batch_count, " done"
 
-# test_labels.extend(getPredictions(clean_test_q1, clean_test_q2, model))		
-# # ****************************************************************
-
-# # print "Getting features of Q1"
-# # testDataVecs_q1 = getAvgFeatureVecs( clean_test_q1, model, num_features=300 )
-
-# # print "Getting features of Q2"
-# # testDataVecs_q2 = getAvgFeatureVecs( clean_test_q2, model, num_features=300 )
-
-# # # ****************************************************************
-
-# # clean_test_q1 = []
-# # clean_test_q2 = []
-
-# testData = []
-# test = []
-
-# # ****************************************************************
-# # # ****************************************************************
-
-# # print "Get Similarities"
-
-# # test_features = []
-# # for review1, review2 in zip(testDataVecs_q1, testDataVecs_q2):
-# # 	try:
-# # 		test_features.append(1 - spatial.distance.cosine(review1, review2))
-# # 	except:
-# # 		test_features.append(0.0)
-
-# # ######################################################################################
-
-# # testDataVecs_q1 = []
-# # testDataVecs_q2 = []
-
-# # ######################################################################################
-
-# # print "Predict test data features"
-
-# # # Y = test_features[:, None]
-# # Y = np.reshape(features, (len(test_features), 1))
-
-# # test_labels = clf.predict(Y)
+test_labels.extend(getPredictions(clean_test_q1, clean_test_q2, model))		
 
 # ######################################################################################
 
-# print "Write predictions"
+print "Write predictions"
 
-# test_f = pd.read_csv('test.csv')
-# output = pd.DataFrame( data={"test_id":test_f['test_id'], "is_duplicate":test_labels} )
-# output.to_csv( "Word2vec_Custom_Similarity_Measure_Predictions.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
+test_f = pd.read_csv('test.csv')
+output = pd.DataFrame( data={"test_id":test_f['test_id'], "is_duplicate":test_labels} )
+output.to_csv( "Word2vec_Custom_Similarity_Measure_Predictions.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
 
 
 
