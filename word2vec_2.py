@@ -267,8 +267,8 @@ print "Fit train data features"
 X=np.reshape(features, (len(features), 1))
 
 # clf = tree.DecisionTreeClassifier()
-clf = svm.LinearSVC()
-# clf = svm.SVC(kernel='rbf', degree=3)
+# clf = svm.LinearSVC()
+clf = svm.SVC(kernel='rbf', degree=3)
 clf = clf.fit(X, train['is_duplicate'])
 
 # ######################################################################################
