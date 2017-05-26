@@ -69,7 +69,8 @@ def makeFeatureVec(words, model, num_features):
 	# 
 	# Index2word is a list that contains the names of the words in 
 	# the model's vocabulary. Convert it to a set, for speed 
-	index2word_set = set(model.wv.index2word)
+	# index2word_set = set(model.wv.index2word)
+	index2word_set = set(model.index2word)
 	#
 	# Loop over each word in the review and, if it is in the model's
 	# vocaublary, add its feature vector to the total
@@ -213,7 +214,7 @@ downsampling = 1e-3   # Downsample setting for frequent words
 # # It can be helpful to create a meaningful model name and 
 # # save the model for later use. You can load it later using Word2Vec.load()
 # # model_name = "300features_40minwords_10context"
-model_name = "300features_40minwords_10context_allData"
+# model_name = "300features_40minwords_10context_allData"
 # model.save(model_name)
 
 # # ****************************************************************
@@ -221,7 +222,7 @@ model_name = "300features_40minwords_10context_allData"
 # # # using the functions we defined above. Notice that we now use stop word
 # # # removal.
 
-model = word2vec.Word2Vec.load(model_name)
+# model = word2vec.Word2Vec.load(model_name)
 
 # # ****************************************************************
 
@@ -237,9 +238,9 @@ for review1, review2 in zip(train["question1"], train["question2"]):
 
 # # ****************************************************************
 
-# # # Load Google's pre-trained Word2Vec model.
-# # print "Loading model..."
-# # model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
+# Load Google's pre-trained Word2Vec model.
+print "Loading model..."
+model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True, limit=100000)
 
 # # ****************************************************************
 
