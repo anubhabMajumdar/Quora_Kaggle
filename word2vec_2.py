@@ -324,7 +324,7 @@ print "Write predictions"
 
 test_f = pd.read_csv('test.csv')
 output = pd.DataFrame( data={"test_id":test_f['test_id'], "is_duplicate":test_labels} )
-output.to_csv( "Word2vec_Custom_Similarity_Measure_Predictions.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
+output.to_csv( "Word2vec_GoogleNews10000_Custom_Similarity_Measure_Predictions.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
 
 
 
