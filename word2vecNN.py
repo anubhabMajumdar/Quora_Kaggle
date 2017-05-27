@@ -80,7 +80,8 @@ def makeFeatureVec(words, model, num_features):
 			featureVec = np.add(featureVec,model[word])
 	# 
 	# Divide the result by the number of words to get the average
-	featureVec = np.divide(featureVec,nwords)
+	if nwords!=0:
+		featureVec = np.divide(featureVec,nwords)
 	return featureVec
 
 
