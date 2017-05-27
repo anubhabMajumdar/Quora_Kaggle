@@ -161,7 +161,7 @@ clean_train_q2 = []
 
 # # ****************************************************************
 
-epochCount = 3000
+epochCount = 10000
 batch_size = 64
 
 labels_matrix = []
@@ -264,7 +264,7 @@ print "Write predictions"
 
 test_f = pd.read_csv('test.csv')
 output = pd.DataFrame( data={"test_id":test_f['test_id'], "is_duplicate":test_labels} )
-output.to_csv( "Word2vec_GoogleNews500000_Custom_Similarity_Measure_Predictions.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
+output.to_csv( "Word2vec_GoogleNews500000_2LayerNN.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
 
 
 
