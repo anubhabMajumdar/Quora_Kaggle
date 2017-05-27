@@ -125,9 +125,6 @@ for review1, review2 in zip(train["question1"], train["question2"]):
 	print "Train Question ", count, " done"
 	count += 1
 
-	if count>1000:
-		break
-
 # ****************************************************************
 
 num_features = 300    # Word vector dimensionality    
@@ -241,8 +238,7 @@ for review1, review2 in zip(test["question1"], test["question2"]):
 		testDataVecs_q2 = []
 		batch_count+=1
 		print "Batch ", batch_count, " done"
-		break
-
+		
 print "Getting features of Q1"
 testDataVecs_q1 = getAvgFeatureVecs( clean_test_q1, model, num_features=300 )
 
