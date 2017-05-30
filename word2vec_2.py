@@ -240,7 +240,7 @@ for review1, review2 in zip(train["question1"], train["question2"]):
 
 # Load Google's pre-trained Word2Vec model.
 print "Loading model..."
-model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True, limit=100000)
+model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True, limit=300000)
 
 # # ****************************************************************
 
@@ -324,7 +324,7 @@ print "Write predictions"
 
 test_f = pd.read_csv('test.csv')
 output = pd.DataFrame( data={"test_id":test_f['test_id'], "is_duplicate":test_labels} )
-output.to_csv( "Word2vec_GoogleNews10000_Custom_Similarity_Measure_Predictions.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
+output.to_csv( "Word2vec_GoogleNews300000_Custom_Similarity_Measure_Predictions.csv", index=False, header=True, columns=["test_id", "is_duplicate"])
 
 
 
